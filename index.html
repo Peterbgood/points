@@ -50,7 +50,7 @@
             border-radius: 8px;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
             margin-bottom: 10px;
-            padding: 10px;
+            padding: 12px;
             cursor: move;
         }
         .stacked-item.dragging {
@@ -116,16 +116,22 @@
             }
             .stacked-item {
                 font-size: 0.8rem;
-                padding: 8px;
+                padding: 12px;
+            }
+            .stacked-item .editable {
+                text-align: center;
+                padding: 12px;
             }
             .btn-up, .color-btn {
                 font-size: 0.7rem;
-                padding: 3px 6px;
-                height: 24px;
+                padding: 6px 10px;
+                height: 28px;
                 margin-top: 8px;
             }
             .editable-input {
                 font-size: 0.8rem;
+                text-align: center;
+                padding: 12px;
             }
         }
         @media (min-width: 577px) {
@@ -145,8 +151,8 @@
             <thead>
                 <tr>
                     <th>Pain Point</th>
-                    <th>Move</th>
                     <th>Color</th>
+                    <th>Move</th>
                 </tr>
             </thead>
             <tbody id="painPointsList"></tbody>
@@ -233,15 +239,22 @@
             element.appendChild(input);
             input.focus();
             input.addEventListener('blur', () => {
-                const newText = input.value.trim() || 'Untitled';
-                element.textContent = newText;
-                if (stackedItem) {
-                    const stackedEditable = stackedItem.querySelector('.editable');
-                    if (stackedEditable) {
-                        stackedEditable.textContent = newText;
+                const newText = input.value.trim();
+                if (newText === '') {
+                    // Remove the row and stacked item if text is deleted
+                    if (row) row.remove();
+                    if (stackedItem) stackedItem.remove();
+                } else {
+                    element.textContent = newText;
+                    if (stackedItem) {
+                        const stackedEditable = stackedItem.querySelector('.editable');
+                        if (stackedEditable) {
+                            stackedEditable.textContent = newText;
+                        }
                     }
                 }
                 saveToLocalStorage();
+                updateBodyBackgroundColor();
             });
             input.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
@@ -270,8 +283,8 @@
             tr.dataset.id = Date.now() + Math.random();
             tr.innerHTML = `
                 <td class="editable">${text || 'Untitled'}</td>
-                <td><button class="btn btn-sm btn-secondary btn-up">Up</button></td>
                 <td><button class="color-btn" style="background-color: ${colors[colorIndex].hex}"></button></td>
+                <td><button class="btn btn-sm btn-secondary btn-up">Up</button></td>
             `;
             const editable = tr.querySelector('.editable');
             const upButton = tr.querySelector('.btn-up');
@@ -305,10 +318,10 @@
                     <span class="editable d-block">${text || 'Untitled'}</span>
                 </div>
                 <div class="mb-2">
-                    <button class="btn btn-sm btn-secondary btn-up">Up</button>
+                    <button class="color-btn" style="background-color: ${colors[colorIndex].hex}"></button>
                 </div>
                 <div>
-                    <button class="color-btn" style="background-color: ${colors[colorIndex].hex}"></button>
+                    <button class="btn btn-sm btn-secondary btn-up">Up</button>
                 </div>
             `;
             const editable = div.querySelector('.editable');

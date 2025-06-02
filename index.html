@@ -2,50 +2,144 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pain Points - Table Format</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pain Points - Enhanced Table</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            padding: 20px;
+            padding: 15px;
             min-height: 100vh;
-            font-family: Arial, sans-serif;
-            transition: background-color 1s ease;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            transition: background-color 0.5s ease;
         }
         .table-container {
-            max-width: 800px;
+            max-width: 600px;
             margin: 0 auto;
         }
         .table {
             background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .table thead th {
+            background-color: #343a40;
+            color: white;
+            font-weight: 500;
         }
         tr {
             cursor: move;
+            transition: background-color 0.3s;
         }
         tr.dragging {
-            opacity: 0.5;
-        }
-        .color-btn {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: none;
-            display: inline-block;
-        }
-        .add-item-form {
-            max-width: 800px;
-            margin-top: 20px;
-            margin-left: auto;
-            margin-right: auto;
+            opacity: 0.7;
+            background-color: #e9ecef;
         }
         td {
             vertical-align: middle;
+            padding: 8px;
+            font-size: 0.9rem;
+        }
+        .color-btn {
+            width: 100%;
+            height: 100%;
+            min-height: 30px;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+            transition: transform 0.2s;
+        }
+        .color-btn:hover {
+            transform: scale(1.05);
+        }
+        .btn-up {
+            padding: 4px 8px;
+            font-size: 0.8rem;
+            width: 100%;
+        }
+        .add-item-form {
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        .input-group {
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        .form-control {
+            font-size: 0.9rem;
+            border: none;
+        }
+        .form-control:focus {
+            box-shadow: none;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .editable-input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-size: 0.9rem;
+            padding: 0;
+        }
+        .editable-input:focus {
+            outline: none;
+            border-bottom: 1px solid #007bff;
+        }
+        .accordion-button {
+            font-size: 0.9rem;
+            padding: 8px;
+        }
+        .accordion-body {
+            padding: 8px;
+        }
+        @media (max-width: 576px) {
+            .table {
+                display: none;
+            }
+            .accordion {
+                display: block;
+                background-color: white;
+                border-radius: 10px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+            .accordion-button {
+                font-size: 0.8rem;
+            }
+            .accordion-body {
+                font-size: 0.8rem;
+                padding: 8px;
+            }
+            .btn-up {
+                font-size: 0.7rem;
+                padding: 3px 6px;
+            }
+            .color-btn {
+                min-height: 24px;
+            }
+            .editable-input {
+                font-size: 0.8rem;
+            }
+        }
+        @media (min-width: 577px) {
+            .accordion {
+                display: none;
+            }
+            .table {
+                display: table;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container table-container">
-        <h1 class="text-center mb-4">Pain Points</h1>
+        <h1 class="text-center mb-4 fw-bold" style="font-size: 1.5rem;">Pain Points</h1>
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -56,6 +150,7 @@
             </thead>
             <tbody id="painPointsList"></tbody>
         </table>
+        <div id="accordionList" class="accordion"></div>
         <div class="add-item-form">
             <div class="input-group">
                 <input type="text" id="newPainPoint" class="form-control" placeholder="Add a new pain point">
@@ -67,19 +162,20 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const colors = [
-            { hex: '#ff0000', rgb: [255, 0, 0] },   // Red
-            { hex: '#ff69b4', rgb: [255, 105, 180] }, // Pink
-            { hex: '#ffa500', rgb: [255, 165, 0] },  // Orange
-            { hex: '#00ff00', rgb: [0, 255, 0] }     // Green
+            { hex: '#ff6666', rgb: [255, 102, 102] }, // Light Red
+            { hex: '#ff99cc', rgb: [255, 153, 204] }, // Light Pink
+            { hex: '#ffcc66', rgb: [255, 204, 102] }, // Light Orange
+            { hex: '#99ff99', rgb: [153, 255, 153] }  // Light Green
         ];
         const list = document.getElementById('painPointsList');
+        const accordionList = document.getElementById('accordionList');
         const input = document.getElementById('newPainPoint');
         let draggedItem = null;
 
         function updateBodyBackgroundColor() {
             const rows = list.querySelectorAll('tr');
             if (rows.length === 0) {
-                document.body.style.backgroundColor = '#ffffff';
+                document.body.style.backgroundColor = '#f8f9fa';
                 return;
             }
             let r = 0, g = 0, b = 0;
@@ -96,23 +192,56 @@
             document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
         }
 
-        function toggleRowColor(button, row) {
+        function toggleRowColor(button, row, accordionItem) {
             const currentColor = parseInt(row.dataset.colorIndex) || 0;
             const nextColor = (currentColor + 1) % colors.length;
             row.style.backgroundColor = colors[nextColor].hex;
             row.dataset.colorIndex = nextColor;
             button.style.backgroundColor = colors[nextColor].hex;
+            if (accordionItem) {
+                accordionItem.style.backgroundColor = colors[nextColor].hex;
+                accordionItem.querySelector('.color-btn').style.backgroundColor = colors[nextColor].hex;
+            }
             saveToLocalStorage();
             updateBodyBackgroundColor();
         }
 
-        function moveUp(row) {
+        function moveUp(row, accordionItem) {
             const prevRow = row.previousElementSibling;
             if (prevRow) {
                 row.parentNode.insertBefore(row, prevRow);
+                const accordionItems = [...accordionList.querySelectorAll('.accordion-item')];
+                const index = accordionItems.indexOf(accordionItem);
+                if (index > 0) {
+                    accordionList.insertBefore(accordionItem, accordionItems[index - 1]);
+                }
                 saveToLocalStorage();
                 updateBodyBackgroundColor();
             }
+        }
+
+        function makeEditable(cell, row, accordionButton, accordionItem) {
+            const text = cell.textContent;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'editable-input';
+            input.value = text;
+            cell.innerHTML = '';
+            cell.appendChild(input);
+            input.focus();
+            input.addEventListener('blur', () => {
+                const newText = input.value.trim() || 'Untitled';
+                cell.textContent = newText;
+                if (accordionButton) {
+                    accordionButton.textContent = newText;
+                }
+                saveToLocalStorage();
+            });
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    input.blur();
+                }
+            });
         }
 
         function addPainPoint() {
@@ -120,6 +249,8 @@
             if (text) {
                 const tr = createTableRow(text);
                 list.appendChild(tr);
+                const accordionItem = createAccordionItem(text);
+                accordionList.appendChild(accordionItem);
                 saveToLocalStorage();
                 updateBodyBackgroundColor();
                 input.value = '';
@@ -132,10 +263,12 @@
             tr.dataset.colorIndex = colorIndex;
             tr.style.backgroundColor = colors[colorIndex].hex;
             tr.innerHTML = `
-                <td>${text || 'Untitled'}</td>
-                <td><button class="btn btn-sm btn-secondary" onclick="moveUp(this.parentNode.parentNode)">Up</button></td>
-                <td><button class="color-btn" style="background-color: ${colors[colorIndex].hex}" onclick="toggleRowColor(this, this.parentNode.parentNode)"></button></td>
+                <td class="editable">${text || 'Untitled'}</td>
+                <td><button class="btn btn-sm btn-secondary btn-up" onclick="moveUp(this.parentNode.parentNode, document.getElementById('accordion-item-' + this.parentNode.parentNode.dataset.id))">Up</button></td>
+                <td><button class="color-btn" style="background-color: ${colors[colorIndex].hex}" onclick="toggleRowColor(this, this.parentNode.parentNode, document.getElementById('accordion-item-' + this.parentNode.parentNode.dataset.id))"></button></td>
             `;
+            tr.dataset.id = Date.now() + Math.random(); // Unique ID for linking with accordion
+            tr.querySelector('.editable').addEventListener('click', () => makeEditable(tr.querySelector('.editable'), tr, null, null));
             tr.addEventListener('dragstart', () => {
                 draggedItem = tr;
                 tr.classList.add('dragging');
@@ -143,34 +276,89 @@
             tr.addEventListener('dragend', () => {
                 tr.classList.remove('dragging');
                 draggedItem = null;
+                syncAccordionOrder();
                 saveToLocalStorage();
                 updateBodyBackgroundColor();
             });
             return tr;
         }
 
+        function createAccordionItem(text, colorIndex = 0) {
+            const id = Date.now() + Math.random();
+            const accordionItem = document.createElement('div');
+            accordionItem.className = 'accordion-item';
+            accordionItem.id = 'accordion-item-' + id;
+            accordionItem.style.backgroundColor = colors[colorIndex].hex;
+            accordionItem.innerHTML = `
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-${id}" aria-expanded="false" aria-controls="collapse-${id}">
+                        ${text || 'Untitled'}
+                    </button>
+                </h2>
+                <div id="collapse-${id}" class="accordion-collapse collapse" data-bs-parent="#accordionList">
+                    <div class="accordion-body d-flex justify-content-between align-items-center">
+                        <input type="text" class="editable-input me-2" value="${text || 'Untitled'}">
+                        <button class="btn btn-sm btn-secondary btn-up" onclick="moveUp(document.querySelector('[data-id=\"${id}\"]'), this.parentNode.parentNode.parentNode)">Up</button>
+                        <button class="color-btn" style="background-color: ${colors[colorIndex].hex}" onclick="toggleRowColor(this, document.querySelector('[data-id=\"${id}\"]'), this.parentNode.parentNode.parentNode)"></button>
+                    </div>
+                </div>
+            `;
+            const input = accordionItem.querySelector('.editable-input');
+            input.addEventListener('blur', () => {
+                const newText = input.value.trim() || 'Untitled';
+                accordionItem.querySelector('.accordion-button').textContent = newText;
+                const row = list.querySelector(`[data-id="${id}"]`);
+                if (row) row.querySelector('.editable').textContent = newText;
+                saveToLocalStorage();
+            });
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    input.blur();
+                }
+            });
+            return accordionItem;
+        }
+
+        function syncAccordionOrder() {
+            const rows = [...list.querySelectorAll('tr')];
+            const accordionItems = [...accordionList.querySelectorAll('.accordion-item')];
+            accordionList.innerHTML = '';
+            rows.forEach(row => {
+                const text = row.querySelector('.editable').textContent;
+                const colorIndex = parseInt(row.dataset.colorIndex) || 0;
+                const accordionItem = createAccordionItem(text, colorIndex);
+                accordionItem.id = 'accordion-item-' + row.dataset.id;
+                accordionList.appendChild(accordionItem);
+            });
+        }
+
         function saveToLocalStorage() {
             const items = [...list.querySelectorAll('tr')].map(row => ({
-                text: row.querySelector('td:first-child').textContent || '',
-                colorIndex: parseInt(row.dataset.colorIndex) || 0
+                text: row.querySelector('.editable').textContent || '',
+                colorIndex: parseInt(row.dataset.colorIndex) || 0,
+                id: row.dataset.id
             }));
             localStorage.setItem('painPoints', JSON.stringify(items));
         }
 
         function loadFromLocalStorage() {
             const defaultItems = [
-                { text: 'Tell me what to do', colorIndex: 0 },
-                { text: 'Not doing enough', colorIndex: 0 },
-                { text: 'Mad when I talk to mom', colorIndex: 0 },
-                { text: 'Mad when I talk to friends', colorIndex: 0 },
-                { text: 'Mad about holiday efforts', colorIndex: 0 },
-                { text: 'Mad about my spending', colorIndex: 0 }
+                { text: 'Tell me what to do', colorIndex: 0, id: Date.now() + Math.random() },
+                { text: 'Not doing enough', colorIndex: 0, id: Date.now() + Math.random() },
+                { text: 'Mad when I talk to mom', colorIndex: 0, id: Date.now() + Math.random() },
+                { text: 'Mad when I talk to friends', colorIndex: 0, id: Date.now() + Math.random() },
+                { text: 'Mad about holiday efforts', colorIndex: 0, id: Date.now() + Math.random() },
+                { text: 'Mad about my spending', colorIndex: 0, id: Date.now() + Math.random() }
             ];
             const savedItems = JSON.parse(localStorage.getItem('painPoints')) || defaultItems;
             savedItems.forEach(item => {
                 if (item.text && item.text !== 'undefined' && item.text !== '') {
                     const tr = createTableRow(item.text, item.colorIndex);
+                    tr.dataset.id = item.id || Date.now() + Math.random();
                     list.appendChild(tr);
+                    const accordionItem = createAccordionItem(item.text, item.colorIndex);
+                    accordionItem.id = 'accordion-item-' + tr.dataset.id;
+                    accordionList.appendChild(accordionItem);
                 }
             });
             updateBodyBackgroundColor();
@@ -200,6 +388,7 @@
                     } else {
                         dropTarget.before(draggedItem);
                     }
+                    syncAccordionOrder();
                     saveToLocalStorage();
                     updateBodyBackgroundColor();
                 }

@@ -96,6 +96,17 @@
         .btn-primary:hover {
             background-color: #0056b3;
         }
+        .btn-danger {
+            background-color: #dc3545;
+            border: none;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .btn-danger:hover {
+            background-color: #b02a37;
+        }
         .editable-input {
             width: 100%;
             border: none;
@@ -111,6 +122,8 @@
             max-width: 600px;
             margin: 20px auto;
             background-color: transparent;
+            display: flex;
+            justify-content: flex-end; /* Right-align toggler in mobile */
         }
         .navbar-nav .nav-link {
             color: #343a40;
@@ -123,6 +136,7 @@
         }
         .navbar-toggler {
             border: none;
+            margin-left: auto; /* Push toggler to the right */
         }
         .navbar-toggler-icon {
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(52, 58, 64, 0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
@@ -166,6 +180,9 @@
             }
             .table {
                 display: table;
+            }
+            .navbar {
+                justify-content: center; /* Center nav items in desktop view */
             }
         }
     </style>
@@ -213,6 +230,7 @@
                 <input type="text" id="newItem" class="form-control" placeholder="Add a new pain point">
                 <button class="btn btn-primary" id="addButton">Add</button>
             </div>
+            <button class="btn btn-danger" id="deleteListButton" style="display: none;">Delete List</button>
         </div>
     </div>
 
@@ -283,6 +301,7 @@
         const listTitle = document.getElementById('listTitle');
         const itemLabel = document.getElementById('itemLabel');
         const listTabs = document.getElementById('listTabs');
+        const deleteListButton = document.getElementById('deleteListButton');
         let draggedItem = null;
 
         function updateBodyBackgroundColor() {
@@ -470,7 +489,7 @@
             const stackedItems = [...stackedList.querySelectorAll('.stacked-item')];
             listElement.innerHTML = '';
             stackedItems.forEach(item => {
-                const text = item.queryROTator('.editable').textContent;
+                const text = item.querySelector('.editable').textContent;
                 const rowId = item.id.replace('stacked-item-', '');
                 const existingRow = listElement.querySelector(`[data-id="${rowId}"]`);
                 const colorIndex = existingRow ? parseInt(existingRow.dataset.colorIndex) || 0 : 0;
@@ -567,6 +586,20 @@
             }
         }
 
+        function deleteList() {
+            if (defaultLists[currentList]) {
+                alert('Default lists cannot be deleted.');
+                return;
+            }
+            if (confirm(`Are you sure you want to delete the "${lists[currentList].title}" list? This action cannot be undone.`)) {
+                localStorage.removeItem(lists[currentList].storageKey);
+                delete lists[currentList];
+                saveListsConfig();
+                renderNavMenu();
+                loadList('painPoints'); // Switch to default list
+            }
+        }
+
         function loadList(listKey) {
             if (listKey === 'newList') {
                 addNewList();
@@ -579,6 +612,9 @@
             input.placeholder = config.placeholder;
             listElement.innerHTML = '';
             stackedList.innerHTML = '';
+
+            // Show/hide delete button based on whether the list is custom
+            deleteListButton.style.display = defaultLists[listKey] ? 'none' : 'block';
 
             const savedItems = JSON.parse(localStorage.getItem(config.storageKey)) || config.defaultItems;
             savedItems.forEach(item => {
@@ -671,6 +707,7 @@
         });
 
         addButton.addEventListener('click', addItem);
+        deleteListButton.addEventListener('click', deleteList);
 
         loadListsConfig();
         loadList('painPoints');

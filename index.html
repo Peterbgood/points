@@ -65,7 +65,7 @@
             transition: transform 0.2s;
         }
         .color-btn:hover {
-          
+            transform: scale(1.05);
         }
         .btn-up {
             padding: 4px 8px;
@@ -169,10 +169,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const colors = [
-            { hex: '#ff6666', rgb: [255, 102, 102] }, // Light Red
-            { hex: '#ff99cc', rgb: [255, 153, 204] }, // Light Pink
-            { hex: '#ffcc66', rgb: [255, 204, 102] }, // Light Orange
-            { hex: '#99ff99', rgb: [153, 255, 153] }  // Light Green
+            { hex: '#ff6666', rgb: [255, 102, 102] }, // Red
+            { hex: '#ffcc66', rgb: [255, 204, 102] }, // Yellow
+            { hex: '#99ff99', rgb: [153, 255, 153] }  // Green
         ];
         const list = document.getElementById('painPointsList');
         const stackedList = document.getElementById('stackedList');
@@ -238,10 +237,10 @@
             element.innerHTML = '';
             element.appendChild(input);
             input.focus();
-            input.addEventListener('blur', () => {
+
+            function saveEditedText() {
                 const newText = input.value.trim();
                 if (newText === '') {
-                    // Remove the row and stacked item if text is deleted
                     if (row) row.remove();
                     if (stackedItem) stackedItem.remove();
                 } else {
@@ -252,10 +251,13 @@
                             stackedEditable.textContent = newText;
                         }
                     }
+                    if (row) row.dataset.text = newText;
                 }
                 saveToLocalStorage();
                 updateBodyBackgroundColor();
-            });
+            }
+
+            input.addEventListener('blur', saveEditedText);
             input.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     input.blur();
@@ -281,6 +283,7 @@
             tr.draggable = true;
             tr.dataset.colorIndex = colorIndex;
             tr.dataset.id = Date.now() + Math.random();
+            tr.dataset.text = text;
             tr.innerHTML = `
                 <td class="editable">${text || 'Untitled'}</td>
                 <td><button class="color-btn" style="background-color: ${colors[colorIndex].hex}"></button></td>
@@ -373,7 +376,7 @@
 
         function saveToLocalStorage() {
             const items = [...list.querySelectorAll('tr')].map(row => ({
-                text: row.querySelector('.editable').textContent || '',
+                text: row.dataset.text || row.querySelector('.editable').textContent || '',
                 colorIndex: parseInt(row.dataset.colorIndex) || 0,
                 id: row.dataset.id
             }));

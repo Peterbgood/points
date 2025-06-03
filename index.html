@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pain Points - Enhanced Table</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -97,6 +98,16 @@
         .btn-primary:hover {
             background-color: #0056b3;
         }
+        .btn-reset {
+            background-color: #dc3545;
+            border: none;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+        .btn-reset:hover {
+            background-color: #b02a37;
+        }
         .editable-input {
             width: 100%;
             border: none;
@@ -163,6 +174,7 @@
             <div class="input-group">
                 <input type="text" id="newPainPoint" class="form-control" placeholder="Add a new pain point">
                 <button class="btn btn-primary" id="addButton">Add</button>
+                <button class="btn btn-reset" id="resetButton">Reset</button>
             </div>
         </div>
     </div>
@@ -180,7 +192,11 @@
             const stackedList = document.getElementById('stackedList');
             const input = document.getElementById('newPainPoint');
             const addButton = document.getElementById('addButton');
+            const resetButton = document.getElementById('resetButton');
             let draggedItem = null;
+
+            // Generate a unique localStorage key based on the page's pathname
+            const storageKey = `painPoints_${window.location.pathname.replace(/[\/\\]/g, '_') || 'default'}`;
 
             function isLocalStorageAvailable() {
                 try {
@@ -266,6 +282,7 @@
                             }
                         }
                     }
+                    console.log('Text updated to:', newText);
                     saveToLocalStorage();
                     updateBodyBackgroundColor();
                 });
@@ -394,7 +411,8 @@
                             id: row.dataset.id
                         }))
                         .filter(item => item.text.trim() !== '');
-                    localStorage.setItem('painPoints', JSON.stringify(items));
+                    console.log('Saving to localStorage:', items);
+                    localStorage.setItem(storageKey, JSON.stringify(items));
                 } catch (error) {
                     console.error('Failed to save to localStorage:', error);
                 }
@@ -410,7 +428,7 @@
                     { text: 'Mad about my spending', colorIndex: 0, id: Date.now() + Math.random() }
                 ];
                 try {
-                    let savedItems = isLocalStorageAvailable() ? JSON.parse(localStorage.getItem('painPoints')) : null;
+                    let savedItems = isLocalStorageAvailable() ? JSON.parse(localStorage.getItem(storageKey)) : null;
                     savedItems = savedItems && Array.isArray(savedItems) ? savedItems : defaultItems;
                     console.log('Loaded items from localStorage:', savedItems);
                     savedItems = savedItems
@@ -440,7 +458,48 @@
                 }
             }
 
+            function resetLocalStorage() {
+                if (isLocalStorageAvailable()) {
+                    localStorage.removeItem(storageKey);
+                    console.log(`Cleared localStorage for key: ${storageKey}`);
+                    list.innerHTML = '';
+                    stackedList.innerHTML = '';
+                    loadFromLocalStorage();
+                }
+            }
+
             list.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+
+            list.addEventListener('drop', (e) => {
+                e.preventDefault();
+                if (draggedItem && draggedItem.tagName === 'TR') {
+                    const allRows = [...list.querySelectorAll('tr')];
+                    let dropTarget = null;
+                    for (const row of allRows) {
+                        const rect = row.getBoundingClientRect();
+                        if (e.clientY <= rect.top + rect.height / 2 && e.clientY >= rect.top) {
+                            dropTarget = row;
+                            break;
+                        }
+                    }
+                    if (dropTarget && dropTarget !== draggedItem) {
+                        const dropIndex = allRows.indexOf(dropTarget);
+                        const draggedIndex = allRows.indexOf(draggedItem);
+                        if (draggedIndex < dropIndex) {
+                            dropTarget.after(draggedItem);
+                        } else {
+                            dropTarget.before(draggedItem);
+                        }
+                        syncStackedOrder();
+                        saveToLocalStorage();
+                        updateBodyBackgroundColor();
+                    }
+                }
+            });
+
+            stackedList.addEventListener('dragover', (e) => {
                 e.preventDefault();
             });
 
@@ -509,6 +568,7 @@
             });
 
             addButton.addEventListener('click', addPainPoint);
+            resetButton.addEventListener('click', resetLocalStorage);
 
             loadFromLocalStorage();
         });

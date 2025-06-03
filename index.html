@@ -1,577 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pain Points - Enhanced Table</title>
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            padding: 15px;
-            min-height: 100vh;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #f8f9fa;
-            transition: background-color 0.5s ease;
-            background-color: #f1f1f1 !important;
-        }
-        .table-container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .table {
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-        .table thead th {
-            background-color: #343a40;
-            color: white;
-            font-weight: 500;
-        }
-        tr {
-            cursor: move;
-            background-color: white;
-        }
-        tr.dragging {
-            opacity: 0.7;
-            background-color: #e9ecef;
-        }
-        td {
-            vertical-align: middle;
-            padding: 8px;
-            font-size: 0.9rem;
-        }
-        .stacked-list {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .stacked-item {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 10px;
-            padding: 12px;
-            cursor: move;
-        }
-        .stacked-item.dragging {
-            opacity: 0.7;
-            background-color: #e9ecef;
-        }
-        .color-btn {
-            width: 100%;
-            height: 30px;
-            border-radius: 5px;
-            border: 1px solid #dee2e6;
-            transition: transform 0.2s;
-        }
-        .color-btn:hover {
-            /* Add hover effect if desired */
-        }
-        .btn-up {
-            padding: 4px 8px;
-            font-size: 0.8rem;
-            width: 100%;
-        }
-        .add-item-form {
-            max-width: 600px;
-            margin: 20px auto;
-        }
-        .input-group {
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-        }
-        .form-control {
-            font-size: 0.9rem;
-            border: none;
-        }
-        .form-control:focus {
-            box-shadow: none;
-        }
-        .btn-primary {
-            background-color: #007bff;
-            border: none;
-            padding: 8px 16px;
-            font-size: 0.9rem;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-        .btn-reset {
-            background-color: #dc3545;
-            border: none;
-            padding: 8px 16px;
-            font-size: 0.9rem;
-            margin-left: 10px;
-        }
-        .btn-reset:hover {
-            background-color: #b02a37;
-        }
-        .editable-input {
-            width: 100%;
-            border: none;
-            background: transparent;
-            font-size: 0.9rem;
-            padding: 0;
-        }
-        .editable-input:focus {
-            outline: none;
-            border-bottom: 1px solid #007bff;
-        }
-        @media (max-width: 576px) {
-            .table {
-                display: none;
-            }
-            .stacked-list {
-                display: block;
-            }
-            .stacked-item {
-                font-size: 0.8rem;
-                padding: 12px;
-            }
-            .stacked-item .editable {
-                text-align: center;
-                padding: 12px;
-            }
-            .btn-up, .color-btn {
-                font-size: 0.7rem;
-                padding: 6px 10px;
-                height: 28px;
-                margin-top: 8px;
-            }
-            .editable-input {
-                font-size: 0.8rem;
-                text-align: center;
-                padding: 12px;
-            }
-        }
-        @media (min-width: 577px) {
-            .stacked-list {
-                display: none;
-            }
-            .table {
-                display: table;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pain Points Todo List</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-size: 16px;
+    }
+    .todo-container {
+      max-width: 100%;
+      padding: 15px;
+    }
+    .todo-item {
+      padding: 10px;
+      border-bottom: 1px solid #dee2e6;
+    }
+    .task-text {
+      font-size: 1rem;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    .task-text.editing {
+      display: none;
+    }
+    .task-input {
+      display: none;
+      width: 100%;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    .task-input.editing {
+      display: block;
+    }
+    .color-square {
+      width: 100%;
+      height: 40px;
+      border: 1px solid #000;
+      cursor: pointer;
+      margin-bottom: 8px;
+    }
+    .btn-up {
+      width: 100%;
+      font-size: 0.9rem;
+      padding: 8px;
+    }
+    .input-group {
+      margin-bottom: 15px;
+    }
+    @media (max-width: 576px) {
+      .todo-item {
+        padding: 8px;
+      }
+      .task-text, .task-input {
+        font-size: 0.9rem;
+      }
+      .color-square {
+        height: 35px;
+      }
+      .btn-up {
+        font-size: 0.8rem;
+        padding: 6px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container table-container">
-        <h1 class="text-center mb-4 fw-bold" style="font-size: 1.5rem;">Pain Points</h1>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Pain Point</th>
-                    <th>Color</th>
-                    <th>Move</th>
-                </tr>
-            </thead>
-            <tbody id="painPointsList"></tbody>
-        </table>
-        <div id="stackedList" class="stacked-list"></div>
-        <div class="add-item-form">
-            <div class="input-group">
-                <input type="text" id="newPainPoint" class="form-control" placeholder="Add a new pain point">
-                <button class="btn btn-primary" id="addButton">Add</button>
-                <button class="btn btn-reset" id="resetButton">Reset</button>
-            </div>
-        </div>
+  <div class="container todo-container">
+    <h1 class="text-center mb-4">Pain Points</h1>
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" id="new-task" placeholder="Add a new pain point">
+      <button class="btn btn-primary" id="add-task">+</button>
     </div>
+    <div id="todo-list"></div>
+  </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const colors = [
-                { hex: '#ff6666', rgb: [255, 102, 102] }, // Light Red
-                { hex: '#ff99cc', rgb: [255, 153, 204] }, // Light Pink
-                { hex: '#ffcc66', rgb: [255, 204, 102] }, // Light Orange
-                { hex: '#99ff99', rgb: [153, 255, 153] }  // Light Green
-            ];
-            const list = document.getElementById('painPointsList');
-            const stackedList = document.getElementById('stackedList');
-            const input = document.getElementById('newPainPoint');
-            const addButton = document.getElementById('addButton');
-            const resetButton = document.getElementById('resetButton');
-            let draggedItem = null;
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const todoList = document.getElementById('todo-list');
+    const newTaskInput = document.getElementById('new-task');
+    const addTaskButton = document.getElementById('add-task');
 
-            // Generate a unique localStorage key based on the page's pathname
-            const storageKey = `painPoints_${window.location.pathname.replace(/[\/\\]/g, '_') || 'default'}`;
+    // Load tasks from local storage
+    let tasks = JSON.parse(localStorage.getItem('painPoints')) || [];
 
-            function isLocalStorageAvailable() {
-                try {
-                    const test = 'test';
-                    localStorage.setItem(test, test);
-                    localStorage.removeItem(test);
-                    return true;
-                } catch (e) {
-                    console.warn('localStorage is not available:', e);
-                    return false;
-                }
-            }
+    // Render tasks
+    function renderTasks() {
+      todoList.innerHTML = '';
+      tasks.forEach((task, index) => {
+        const div = document.createElement('div');
+        div.className = 'todo-item';
+        div.innerHTML = `
+          <span class="task-text">${task.text}</span>
+          <input type="text" class="task-input form-control" value="${task.text}">
+          <div class="color-square" style="background-color: ${task.color}" data-index="${index}"></div>
+          <button class="btn btn-outline-secondary btn-up" data-index="${index}">Up</button>
+        `;
+        todoList.appendChild(div);
+      });
+      attachEventListeners();
+      saveTasks();
+    }
 
-            function updateBodyBackgroundColor() {
-                const rows = list.querySelectorAll('tr');
-                if (rows.length === 0) {
-                    document.body.style.backgroundColor = '#f8f9fa';
-                    return;
-                }
-                let r = 0, g = 0, b = 0;
-                rows.forEach(row => {
-                    const colorIndex = parseInt(row.dataset.colorIndex) || 0;
-                    const rgb = colors[colorIndex].rgb;
-                    r += rgb[0];
-                    g += rgb[1];
-                    b += rgb[2];
-                });
-                r = Math.round(r / rows.length);
-                g = Math.round(g / rows.length);
-                b = Math.round(b / rows.length);
-                document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
-            }
+    // Save tasks to local storage
+    function saveTasks() {
+      localStorage.setItem('painPoints', JSON.stringify(tasks));
+    }
 
-            function toggleRowColor(row, stackedItem, button) {
-                const currentColor = parseInt(row.dataset.colorIndex) || 0;
-                const nextColor = (currentColor + 1) % colors.length;
-                row.dataset.colorIndex = nextColor;
-                button.style.backgroundColor = colors[nextColor].hex;
-                if (stackedItem) {
-                    const stackedButton = stackedItem.querySelector('.color-btn');
-                    if (stackedButton) {
-                        stackedButton.style.backgroundColor = colors[nextColor].hex;
-                    }
-                }
-                saveToLocalStorage();
-                updateBodyBackgroundColor();
-            }
+    // Add new task
+    addTaskButton.addEventListener('click', () => {
+      const text = newTaskInput.value.trim();
+      if (text) {
+        tasks.push({ text, color: 'lightcoral' });
+        newTaskInput.value = '';
+        renderTasks();
+      }
+    });
 
-            function moveUp(row, stackedItem) {
-                const prevRow = row.previousElementSibling;
-                if (prevRow) {
-                    row.parentNode.insertBefore(row, prevRow);
-                    const stackedItems = [...stackedList.querySelectorAll('.stacked-item')];
-                    const index = stackedItems.indexOf(stackedItem);
-                    if (index > 0) {
-                        stackedList.insertBefore(stackedItem, stackedItems[index - 1]);
-                    }
-                    saveToLocalStorage();
-                    updateBodyBackgroundColor();
-                }
-            }
+    // Handle Enter key to add task
+    newTaskInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        addTaskButton.click();
+      }
+    });
 
-            function makeEditable(element, row, stackedItem) {
-                const text = element.textContent;
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.className = 'editable-input';
-                input.value = text;
-                element.innerHTML = '';
-                element.appendChild(input);
-                input.focus();
-                input.addEventListener('blur', () => {
-                    const newText = input.value.trim();
-                    if (newText === '') {
-                        if (row) row.remove();
-                        if (stackedItem) stackedItem.remove();
-                    } else {
-                        element.textContent = newText;
-                        if (stackedItem) {
-                            const stackedEditable = stackedItem.querySelector('.editable');
-                            if (stackedEditable) {
-                                stackedEditable.textContent = newText;
-                            }
-                        }
-                    }
-                    console.log('Text updated to:', newText);
-                    saveToLocalStorage();
-                    updateBodyBackgroundColor();
-                });
-                input.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        input.blur();
-                    }
-                });
-            }
-
-            function addPainPoint() {
-                const text = input.value.trim();
-                if (text) {
-                    const tr = createTableRow(text);
-                    list.appendChild(tr);
-                    const stackedItem = createStackedItem(text, 0, tr.dataset.id);
-                    stackedList.appendChild(stackedItem);
-                    saveToLocalStorage();
-                    updateBodyBackgroundColor();
-                    input.value = '';
-                }
-            }
-
-            function createTableRow(text, colorIndex = 0) {
-                const tr = document.createElement('tr');
-                tr.draggable = true;
-                tr.dataset.colorIndex = colorIndex;
-                tr.dataset.id = Date.now() + Math.random();
-                tr.innerHTML = `
-                    <td class="editable">${text || 'Untitled'}</td>
-                    <td><button class="color-btn" style="background-color: ${colors[colorIndex].hex}"></button></td>
-                    <td><button class="btn btn-sm btn-secondary btn-up">Up</button></td>
-                `;
-                const editable = tr.querySelector('.editable');
-                const upButton = tr.querySelector('.btn-up');
-                const colorButton = tr.querySelector('.color-btn');
-
-                editable.addEventListener('click', () => makeEditable(editable, tr, document.getElementById('stacked-item-' + tr.dataset.id)));
-                upButton.addEventListener('click', () => moveUp(tr, document.getElementById('stacked-item-' + tr.dataset.id)));
-                colorButton.addEventListener('click', () => toggleRowColor(tr, document.getElementById('stacked-item-' + tr.dataset.id), colorButton));
-
-                tr.addEventListener('dragstart', () => {
-                    draggedItem = tr;
-                    tr.classList.add('dragging');
-                });
-                tr.addEventListener('dragend', () => {
-                    tr.classList.remove('dragging');
-                    draggedItem = null;
-                    syncStackedOrder();
-                    saveToLocalStorage();
-                    updateBodyBackgroundColor();
-                });
-                return tr;
-            }
-
-            function createStackedItem(text, colorIndex = 0, id) {
-                const div = document.createElement('div');
-                div.className = 'stacked-item';
-                div.id = 'stacked-item-' + id;
-                div.draggable = true;
-                div.innerHTML = `
-                    <div class="mb-2">
-                        <span class="editable d-block">${text || 'Untitled'}</span>
-                    </div>
-                    <div class="mb-2">
-                        <button class="color-btn" style="background-color: ${colors[colorIndex].hex}"></button>
-                    </div>
-                    <div>
-                        <button class="btn btn-sm btn-secondary btn-up">Up</button>
-                    </div>
-                `;
-                const editable = div.querySelector('.editable');
-                const upButton = div.querySelector('.btn-up');
-                const colorButton = div.querySelector('.color-btn');
-
-                editable.addEventListener('click', () => makeEditable(editable, list.querySelector(`[data-id="${id}"]`), div));
-                upButton.addEventListener('click', () => moveUp(list.querySelector(`[data-id="${id}"]`), div));
-                colorButton.addEventListener('click', () => toggleRowColor(list.querySelector(`[data-id="${id}"]`), div, colorButton));
-
-                div.addEventListener('dragstart', () => {
-                    draggedItem = div;
-                    div.classList.add('dragging');
-                });
-                div.addEventListener('dragend', () => {
-                    div.classList.remove('dragging');
-                    draggedItem = null;
-                    syncTableOrder();
-                    saveToLocalStorage();
-                    updateBodyBackgroundColor();
-                });
-                return div;
-            }
-
-            function syncStackedOrder() {
-                const rows = [...list.querySelectorAll('tr')];
-                stackedList.innerHTML = '';
-                rows.forEach(row => {
-                    const text = row.querySelector('.editable').textContent;
-                    const colorIndex = parseInt(row.dataset.colorIndex) || 0;
-                    const stackedItem = createStackedItem(text, colorIndex, row.dataset.id);
-                    stackedList.appendChild(stackedItem);
-                });
-            }
-
-            function syncTableOrder() {
-                const stackedItems = [...stackedList.querySelectorAll('.stacked-item')];
-                list.innerHTML = '';
-                stackedItems.forEach(item => {
-                    const text = item.querySelector('.editable').textContent;
-                    const rowId = item.id.replace('stacked-item-', '');
-                    const existingRow = list.querySelector(`[data-id="${rowId}"]`);
-                    const colorIndex = existingRow ? parseInt(existingRow.dataset.colorIndex) || 0 : 0;
-                    const tr = createTableRow(text, colorIndex);
-                    tr.dataset.id = rowId;
-                    list.appendChild(tr);
-                });
-            }
-
-            function saveToLocalStorage() {
-                if (!isLocalStorageAvailable()) return;
-                try {
-                    const items = [...list.querySelectorAll('tr')]
-                        .map(row => ({
-                            text: row.querySelector('.editable').textContent || '',
-                            colorIndex: parseInt(row.dataset.colorIndex) || 0,
-                            id: row.dataset.id
-                        }))
-                        .filter(item => item.text.trim() !== '');
-                    console.log('Saving to localStorage:', items);
-                    localStorage.setItem(storageKey, JSON.stringify(items));
-                } catch (error) {
-                    console.error('Failed to save to localStorage:', error);
-                }
-            }
-
-            function loadFromLocalStorage() {
-                const defaultItems = [
-                    { text: 'Tell me what to do', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Not doing enough', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Mad when I talk to mom', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Mad when I talk to friends', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Mad about holiday efforts', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Mad about my spending', colorIndex: 0, id: Date.now() + Math.random() }
-                ];
-                try {
-                    let savedItems = isLocalStorageAvailable() ? JSON.parse(localStorage.getItem(storageKey)) : null;
-                    savedItems = savedItems && Array.isArray(savedItems) ? savedItems : defaultItems;
-                    console.log('Loaded items from localStorage:', savedItems);
-                    savedItems = savedItems
-                        .filter(item => item.text && item.text.trim() !== '' && item.id)
-                        .map((item, index) => ({
-                            ...item,
-                            id: item.id || Date.now() + Math.random() + index
-                        }));
-                    savedItems.forEach(item => {
-                        const tr = createTableRow(item.text, item.colorIndex);
-                        tr.dataset.id = item.id;
-                        list.appendChild(tr);
-                        const stackedItem = createStackedItem(item.text, item.colorIndex, item.id);
-                        stackedList.appendChild(stackedItem);
-                    });
-                    updateBodyBackgroundColor();
-                } catch (error) {
-                    console.error('Failed to load from localStorage, using defaults:', error);
-                    defaultItems.forEach(item => {
-                        const tr = createTableRow(item.text, item.colorIndex);
-                        tr.dataset.id = item.id;
-                        list.appendChild(tr);
-                        const stackedItem = createStackedItem(item.text, item.colorIndex, item.id);
-                        stackedList.appendChild(stackedItem);
-                    });
-                    updateBodyBackgroundColor();
-                }
-            }
-
-            function resetLocalStorage() {
-                if (isLocalStorageAvailable()) {
-                    localStorage.removeItem(storageKey);
-                    console.log(`Cleared localStorage for key: ${storageKey}`);
-                    list.innerHTML = '';
-                    stackedList.innerHTML = '';
-                    loadFromLocalStorage();
-                }
-            }
-
-            list.addEventListener('dragover', (e) => {
-                e.preventDefault();
-            });
-
-            list.addEventListener('drop', (e) => {
-                e.preventDefault();
-                if (draggedItem && draggedItem.tagName === 'TR') {
-                    const allRows = [...list.querySelectorAll('tr')];
-                    let dropTarget = null;
-                    for (const row of allRows) {
-                        const rect = row.getBoundingClientRect();
-                        if (e.clientY <= rect.top + rect.height / 2 && e.clientY >= rect.top) {
-                            dropTarget = row;
-                            break;
-                        }
-                    }
-                    if (dropTarget && dropTarget !== draggedItem) {
-                        const dropIndex = allRows.indexOf(dropTarget);
-                        const draggedIndex = allRows.indexOf(draggedItem);
-                        if (draggedIndex < dropIndex) {
-                            dropTarget.after(draggedItem);
-                        } else {
-                            dropTarget.before(draggedItem);
-                        }
-                        syncStackedOrder();
-                        saveToLocalStorage();
-                        updateBodyBackgroundColor();
-                    }
-                }
-            });
-
-            stackedList.addEventListener('dragover', (e) => {
-                e.preventDefault();
-            });
-
-            list.addEventListener('drop', (e) => {
-                e.preventDefault();
-                if (draggedItem && draggedItem.tagName === 'TR') {
-                    const allRows = [...list.querySelectorAll('tr')];
-                    let dropTarget = null;
-                    for (const row of allRows) {
-                        const rect = row.getBoundingClientRect();
-                        if (e.clientY <= rect.top + rect.height / 2 && e.clientY >= rect.top) {
-                            dropTarget = row;
-                            break;
-                        }
-                    }
-                    if (dropTarget && dropTarget !== draggedItem) {
-                        const dropIndex = allRows.indexOf(dropTarget);
-                        const draggedIndex = allRows.indexOf(draggedItem);
-                        if (draggedIndex < dropIndex) {
-                            dropTarget.after(draggedItem);
-                        } else {
-                            dropTarget.before(draggedItem);
-                        }
-                        syncStackedOrder();
-                        saveToLocalStorage();
-                        updateBodyBackgroundColor();
-                    }
-                }
-            });
-
-            stackedList.addEventListener('dragover', (e) => {
-                e.preventDefault();
-            });
-
-            stackedList.addEventListener('drop', (e) => {
-                e.preventDefault();
-                if (draggedItem && draggedItem.classList.contains('stacked-item')) {
-                    const allItems = [...stackedList.querySelectorAll('.stacked-item')];
-                    let dropTarget = null;
-                    for (const item of allItems) {
-                        const rect = item.getBoundingClientRect();
-                        if (e.clientY <= rect.top + rect.height / 2 && e.clientY >= rect.top) {
-                            dropTarget = item;
-                            break;
-                        }
-                    }
-                    if (dropTarget && dropTarget !== draggedItem) {
-                        const dropIndex = allItems.indexOf(dropTarget);
-                        const draggedIndex = allItems.indexOf(draggedItem);
-                        if (draggedIndex < dropIndex) {
-                            dropTarget.after(draggedItem);
-                        } else {
-                            dropTarget.before(draggedItem);
-                        }
-                        syncTableOrder();
-                        saveToLocalStorage();
-                        updateBodyBackgroundColor();
-                    }
-                }
-            });
-
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    addPainPoint();
-                }
-            });
-
-            addButton.addEventListener('click', addPainPoint);
-            resetButton.addEventListener('click', resetLocalStorage);
-
-            loadFromLocalStorage();
+    // Attach event listeners to squares, text, and up buttons
+    function attachEventListeners() {
+      // Color square click
+      document.querySelectorAll('.color-square').forEach(square => {
+        square.addEventListener('click', () => {
+          const index = square.dataset.index;
+          const colors = ['lightcoral', 'lightsalmon', 'lightgreen'];
+          const currentColor = tasks[index].color;
+          const nextColor = colors[(colors.indexOf(currentColor) + 1) % 3];
+          tasks[index].color = nextColor;
+          renderTasks();
         });
-    </script>
+      });
+
+      // Task text click to edit
+      document.querySelectorAll('.task-text').forEach(text => {
+        text.addEventListener('click', () => {
+          const parent = text.parentElement;
+          parent.querySelector('.task-text').classList.add('editing');
+          parent.querySelector('.task-input').classList.add('editing');
+          parent.querySelector('.task-input').focus();
+        });
+      });
+
+      // Task input blur or enter to save
+      document.querySelectorAll('.task-input').forEach(input => {
+        input.addEventListener('blur', () => {
+          const index = input.parentElement.querySelector('.color-square').dataset.index;
+          tasks[index].text = input.value.trim();
+          renderTasks();
+        });
+        input.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            input.blur();
+          }
+        });
+      });
+
+      // Up button click
+      document.querySelectorAll('.btn-up').forEach(button => {
+        button.addEventListener('click', () => {
+          const index = parseInt(button.dataset.index);
+          if (index > 0) {
+            [tasks[index], tasks[index - 1]] = [tasks[index - 1], tasks[index]];
+            renderTasks();
+          }
+        });
+      });
+    }
+
+    // Initial render
+    renderTasks();
+  </script>
 </body>
 </html>

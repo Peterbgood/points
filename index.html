@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pain Points - Enhanced Table</title>
+    <title>Multi-List Manager</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -107,6 +107,18 @@
             outline: none;
             border-bottom: 1px solid #007bff;
         }
+        .nav-tabs {
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        .nav-link {
+            color: #343a40;
+            font-weight: 500;
+        }
+        .nav-link.active {
+            background-color: #007bff;
+            color: white;
+        }
         @media (max-width: 576px) {
             .table {
                 display: none;
@@ -146,21 +158,35 @@
 </head>
 <body>
     <div class="container table-container">
-        <h1 class="text-center mb-4 fw-bold" style="font-size: 1.5rem;">Pain Points</h1>
+        <ul class="nav nav-tabs mb-4" id="listTabs">
+            <li class="nav-item">
+                <a class="nav-link active" href="#" data-list="painPoints">Pain Points</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-list="wants">Wants</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-list="opponents">Opponents</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-list="sports">Sports</a>
+            </li>
+        </ul>
+        <h1 class="text-center mb-4 fw-bold" style="font-size: 1.5rem;" id="listTitle">Pain Points</h1>
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>Pain Point</th>
+                    <th id="itemLabel">Pain Point</th>
                     <th>Color</th>
                     <th>Move</th>
                 </tr>
             </thead>
-            <tbody id="painPointsList"></tbody>
+            <tbody id="itemList"></tbody>
         </table>
         <div id="stackedList" class="stacked-list"></div>
         <div class="add-item-form">
             <div class="input-group">
-                <input type="text" id="newPainPoint" class="form-control" placeholder="Add a new pain point">
+                <input type="text" id="newItem" class="form-control" placeholder="Add a new pain point">
                 <button class="btn btn-primary" id="addButton">Add</button>
             </div>
         </div>
@@ -168,19 +194,73 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        const lists = {
+            painPoints: {
+                title: 'Pain Points',
+                placeholder: 'Add a new pain point',
+                itemLabel: 'Pain Point',
+                storageKey: 'painPoints',
+                defaultItems: [
+                    { text: 'Tell me what to do', colorIndex: 0, id: Date.now() + Math.random() },
+                    { text: 'Not doing enough', colorIndex: 0, id: Date.now() + Math.random() },
+                    { text: 'Mad when I talk to mom', colorIndex: 0, id: Date.now() + Math.random() },
+                    { text: 'Mad when I talk to friends', colorIndex: 0, id: Date.now() + Math.random() },
+                    { text: 'Mad about holiday efforts', colorIndex: 0, id: Date.now() + Math.random() },
+                    { text: 'Mad about my spending', colorIndex: 0, id: Date.now() + Math.random() }
+                ]
+            },
+            wants: {
+                title: 'Wants',
+                placeholder: 'Add a new want',
+                itemLabel: 'Want',
+                storageKey: 'wants',
+                defaultItems: [
+                    { text: 'More free time', colorIndex: 0, id: Date.now() + Math.random() },
+                    { text: 'Better work-life balance', colorIndex: 0, id: Date.now() + Math.random() },
+                    { text: 'New car', colorIndex: 0, id: Date.now() + Math.random() }
+                ]
+            },
+            opponents: {
+                title: 'Opponents',
+                placeholder: 'Add a new opponent',
+                itemLabel: 'Opponent',
+                storageKey: 'opponents',
+                defaultItems: [
+                    { text: 'Team Alpha', colorIndex: 0, id: Date.now() + Math.random() },
+                    { text: 'Team Beta', colorIndex: 0, id: Date.now() + Math.random() },
+                    { text: 'Team Gamma', colorIndex: 0, id: Date.now() + Math.random() }
+                ]
+            },
+            sports: {
+                title: 'Sports',
+                placeholder: 'Add a new sport',
+                itemLabel: 'Sport',
+                storageKey: 'sports',
+                defaultItems: [
+                    { text: 'Soccer', colorIndex: 0, id: Date.now() + Math.random() },
+                    { text: 'Basketball', colorIndex: 0, id: Date.now() + Math.random() },
+                    { text: 'Tennis', colorIndex: 0, id: Date.now() + Math.random() }
+                ]
+            }
+        };
+
         const colors = [
             { hex: '#ff6666', rgb: [255, 102, 102] }, // Red
             { hex: '#ffcc66', rgb: [255, 204, 102] }, // Yellow
             { hex: '#99ff99', rgb: [153, 255, 153] }  // Green
         ];
-        const list = document.getElementById('painPointsList');
+
+        let currentList = 'painPoints';
+        const listElement = document.getElementById('itemList');
         const stackedList = document.getElementById('stackedList');
-        const input = document.getElementById('newPainPoint');
+        const input = document.getElementById('newItem');
         const addButton = document.getElementById('addButton');
+        const listTitle = document.getElementById('listTitle');
+        const itemLabel = document.getElementById('itemLabel');
         let draggedItem = null;
 
         function updateBodyBackgroundColor() {
-            const rows = list.querySelectorAll('tr');
+            const rows = listElement.querySelectorAll('tr');
             if (rows.length === 0) {
                 document.body.style.backgroundColor = '#f8f9fa';
                 return;
@@ -265,11 +345,11 @@
             });
         }
 
-        function addPainPoint() {
+        function addItem() {
             const text = input.value.trim();
             if (text) {
                 const tr = createTableRow(text);
-                list.appendChild(tr);
+                listElement.appendChild(tr);
                 const stackedItem = createStackedItem(text, 0, tr.dataset.id);
                 stackedList.appendChild(stackedItem);
                 saveToLocalStorage();
@@ -331,9 +411,9 @@
             const upButton = div.querySelector('.btn-up');
             const colorButton = div.querySelector('.color-btn');
 
-            editable.addEventListener('click', () => makeEditable(editable, list.querySelector(`[data-id="${id}"]`), div));
-            upButton.addEventListener('click', () => moveUp(list.querySelector(`[data-id="${id}"]`), div));
-            colorButton.addEventListener('click', () => toggleRowColor(list.querySelector(`[data-id="${id}"]`), div, colorButton));
+            editable.addEventListener('click', () => makeEditable(editable, listElement.querySelector(`[data-id="${id}"]`), div));
+            upButton.addEventListener('click', () => moveUp(listElement.querySelector(`[data-id="${id}"]`), div));
+            colorButton.addEventListener('click', () => toggleRowColor(listElement.querySelector(`[data-id="${id}"]`), div, colorButton));
 
             div.addEventListener('dragstart', () => {
                 draggedItem = div;
@@ -350,7 +430,7 @@
         }
 
         function syncStackedOrder() {
-            const rows = [...list.querySelectorAll('tr')];
+            const rows = [...listElement.querySelectorAll('tr')];
             stackedList.innerHTML = '';
             rows.forEach(row => {
                 const text = row.querySelector('.editable').textContent;
@@ -362,57 +442,68 @@
 
         function syncTableOrder() {
             const stackedItems = [...stackedList.querySelectorAll('.stacked-item')];
-            list.innerHTML = '';
+            listElement.innerHTML = '';
             stackedItems.forEach(item => {
                 const text = item.querySelector('.editable').textContent;
                 const rowId = item.id.replace('stacked-item-', '');
-                const existingRow = list.querySelector(`[data-id="${rowId}"]`);
+                const existingRow = listElement.querySelector(`[data-id="${rowId}"]`);
                 const colorIndex = existingRow ? parseInt(existingRow.dataset.colorIndex) || 0 : 0;
                 const tr = createTableRow(text, colorIndex);
                 tr.dataset.id = rowId;
-                list.appendChild(tr);
+                listElement.appendChild(tr);
             });
         }
 
         function saveToLocalStorage() {
-            const items = [...list.querySelectorAll('tr')].map(row => ({
+            const items = [...listElement.querySelectorAll('tr')].map(row => ({
                 text: row.dataset.text || row.querySelector('.editable').textContent || '',
                 colorIndex: parseInt(row.dataset.colorIndex) || 0,
                 id: row.dataset.id
             }));
-            localStorage.setItem('painPoints', JSON.stringify(items));
+            localStorage.setItem(lists[currentList].storageKey, JSON.stringify(items));
         }
 
-        function loadFromLocalStorage() {
-            const defaultItems = [
-                { text: 'Tell me what to do', colorIndex: 0, id: Date.now() + Math.random() },
-                { text: 'Not doing enough', colorIndex: 0, id: Date.now() + Math.random() },
-                { text: 'Mad when I talk to mom', colorIndex: 0, id: Date.now() + Math.random() },
-                { text: 'Mad when I talk to friends', colorIndex: 0, id: Date.now() + Math.random() },
-                { text: 'Mad about holiday efforts', colorIndex: 0, id: Date.now() + Math.random() },
-                { text: 'Mad about my spending', colorIndex: 0, id: Date.now() + Math.random() }
-            ];
-            const savedItems = JSON.parse(localStorage.getItem('painPoints')) || defaultItems;
+        function loadList(listKey) {
+            currentList = listKey;
+            const config = lists[listKey];
+            listTitle.textContent = config.title;
+            itemLabel.textContent = config.itemLabel;
+            input.placeholder = config.placeholder;
+            listElement.innerHTML = '';
+            stackedList.innerHTML = '';
+            
+            // Map old color indices to new ones (handle pink at index 1 from previous versions)
+            const savedItems = JSON.parse(localStorage.getItem(config.storageKey)) || config.defaultItems;
             savedItems.forEach(item => {
                 if (item.text && item.text !== 'undefined' && item.text !== '') {
-                    const tr = createTableRow(item.text, item.colorIndex);
+                    let newColorIndex = item.colorIndex % colors.length;
+                    if (item.colorIndex === 1 && config.storageKey === 'painPoints') newColorIndex = 0; // Map pink to red for Pain Points
+                    const tr = createTableRow(item.text, newColorIndex);
                     tr.dataset.id = item.id || Date.now() + Math.random();
-                    list.appendChild(tr);
-                    const stackedItem = createStackedItem(item.text, item.colorIndex, tr.dataset.id);
+                    listElement.appendChild(tr);
+                    const stackedItem = createStackedItem(item.text, newColorIndex, tr.dataset.id);
                     stackedList.appendChild(stackedItem);
                 }
             });
             updateBodyBackgroundColor();
+
+            // Update active tab
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.list === listKey) {
+                    link.classList.add('active');
+                }
+            });
         }
 
-        list.addEventListener('dragover', (e) => {
+        listElement.addEventListener('dragover', (e) => {
             e.preventDefault();
         });
 
-        list.addEventListener('drop', (e) => {
+        listElement.addEventListener('drop', (e) => {
             e.preventDefault();
             if (draggedItem && draggedItem.tagName === 'TR') {
-                const allRows = [...list.querySelectorAll('tr')];
+                const allRows = [...listElement.querySelectorAll('tr')];
                 let dropTarget = null;
                 for (const row of allRows) {
                     const rect = row.getBoundingClientRect();
@@ -469,13 +560,20 @@
 
         input.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                addPainPoint();
+                addItem();
             }
         });
 
-        addButton.addEventListener('click', addPainPoint);
+        addButton.addEventListener('click', addItem);
 
-        loadFromLocalStorage();
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                loadList(link.dataset.list);
+            });
+        });
+
+        loadList('painPoints');
     </script>
 </body>
 </html>

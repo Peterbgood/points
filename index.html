@@ -199,10 +199,13 @@
                         <a class="nav-link active" href="#" data-list="wants">Wants</a>
                     </li>
                     <li class="nav-item">
-    <a class="nav-link" href="#" data-list="opponents">Sport Opponents</a>
-</li>
+                        <a class="nav-link" href="#" data-list="opponents">Sport Opponents</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-list="sports">Sports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-list="wellness">Wellness</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-list="newList">New List</a>
@@ -292,6 +295,19 @@
                     { text: 'Ping Pong', colorIndex: 0, id: Date.now() + Math.random() },
                     { text: 'Mountain Biking', colorIndex: 0, id: Date.now() + Math.random() },
                     { text: 'Cornhole', colorIndex: 0, id: Date.now() + Math.random() }
+                ]
+            },
+            wellness: {
+                title: 'Wellness',
+                placeholder: 'Add a new wellness item',
+                itemLabel: 'Wellness Item',
+                storageKey: 'wellness',
+                defaultItems: [
+                    { text: 'Sleep', colorIndex: 0, id: Date.now() + Math.random() },
+                    { text: 'Sunlight', colorIndex: 0, id: Date.now() + Math.random() },
+                    { text: 'Hydration', colorIndex: 0, id: Date.now() + Math.random() },
+                    { text: 'Nutrition Food', colorIndex: 0, id: Date.now() + Math.random() },
+                    { text: 'Walking', colorIndex: 0, id: Date.now() + Math.random() }
                 ]
             }
         };

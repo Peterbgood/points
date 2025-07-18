@@ -11,14 +11,11 @@
             min-height: 100vh;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: #f1f1f1 !important;
-            transition: background-color 0.5s ease;
         }
 
-               #listTitle, .editable, .nav-link {
-    
-    
-    text-transform: capitalize
-}
+        #listTitle, .editable, .nav-link {
+            text-transform: capitalize;
+        }
         .table-container {
             max-width: 600px;
             margin: 0 auto;
@@ -62,16 +59,6 @@
         .stacked-item.dragging {
             opacity: 0.7;
             background-color: #e9ecef;
-        }
-        .color-btn {
-            width: 100%;
-            height: 30px;
-            border-radius: 5px;
-            border: 1px solid #dee2e6;
-            transition: transform 0.2s;
-        }
-        .color-btn:hover {
-            transform: scale(1.05);
         }
         .btn-up {
             padding: 4px 8px;
@@ -162,10 +149,9 @@
                 text-align: center;
                 padding: 12px;
             }
-            .btn-up, .color-btn {
+            .btn-up {
                 font-size: 0.7rem;
                 padding: 6px 10px;
-                height: 28px;
                 margin-top: 8px;
             }
             .editable-input {
@@ -204,7 +190,6 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="#" data-list="wants">Wants</a>
                     </li>
-                    
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-list="newList">New List</a>
                     </li>
@@ -216,7 +201,6 @@
             <thead>
                 <tr>
                     <th id="itemLabel">Want</th>
-                    <th>Color</th>
                     <th>Move</th>
                 </tr>
             </thead>
@@ -241,82 +225,25 @@
                 itemLabel: 'Want',
                 storageKey: 'wants',
                 defaultItems: [
-                    { text: 'PAW', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Project', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Pick-up sport', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Positive visualization', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Meeting New people', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Chatting with mates', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Praise', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'S', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Researching stuff', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Hard Work (Flow)', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Growth', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Drinking', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Problem Solving', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Completing a task', colorIndex: 0, id: Date.now() + Math.random() }
-                ]
-            },
-            opponents: {
-                title: 'Sport Opponents',
-                placeholder: 'Add a new Sport Opponents',
-                itemLabel: 'Sport Opponent',
-                storageKey: 'opponents',
-                defaultItems: [
-                    { text: 'Sarah', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Sophie', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Trish', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Steve', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Brian', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Michelle', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Pam', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Luis', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Hector', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Jon', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Paul', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Jaime', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Narcis', colorIndex: 0, id: Date.now() + Math.random() }
-                ]
-            },
-            sports: {
-                title: 'Sports',
-                placeholder: 'Add a new sport',
-                itemLabel: 'Sport',
-                storageKey: 'sports',
-                defaultItems: [
-                    { text: 'Action cricket', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Foosball', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Tag Football', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Touch Rugby', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Volley Ball', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Pickle Ball', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Ping Pong', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Mountain Biking', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Cornhole', colorIndex: 0, id: Date.now() + Math.random() }
-                ]
-            },
-            wellness: {
-                title: 'Wellness',
-                placeholder: 'Add a new wellness item',
-                itemLabel: 'Wellness Item',
-                storageKey: 'wellness',
-                defaultItems: [
-                    { text: 'Sleep', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Sunlight', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Hydration', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Nutrition Food', colorIndex: 0, id: Date.now() + Math.random() },
-                    { text: 'Walking', colorIndex: 0, id: Date.now() + Math.random() }
+                    { text: 'PAW', id: Date.now() + Math.random() },
+                    { text: 'Project', id: Date.now() + Math.random() },
+                    { text: 'Pick-up sport', id: Date.now() + Math.random() },
+                    { text: 'Positive visualization', id: Date.now() + Math.random() },
+                    { text: 'Meeting New people', id: Date.now() + Math.random() },
+                    { text: 'Chatting with mates', id: Date.now() + Math.random() },
+                    { text: 'Praise', id: Date.now() + Math.random() },
+                    { text: 'S', id: Date.now() + Math.random() },
+                    { text: 'Researching stuff', id: Date.now() + Math.random() },
+                    { text: 'Hard Work (Flow)', id: Date.now() + Math.random() },
+                    { text: 'Growth', id: Date.now() + Math.random() },
+                    { text: 'Drinking', id: Date.now() + Math.random() },
+                    { text: 'Problem Solving', id: Date.now() + Math.random() },
+                    { text: 'Completing a task', id: Date.now() + Math.random() }
                 ]
             }
         };
 
         let lists = { ...defaultLists };
-        const colors = [
-            { hex: '#ff6666', rgb: [255, 102, 102] }, // Red
-            { hex: '#ffcc66', rgb: [255, 204, 102] }, // Yellow
-            { hex: '#99ff99', rgb: [153, 255, 153] }  // Green
-        ];
-
         let currentList = 'wants'; // Set default to 'wants'
         const listElement = document.getElementById('itemList');
         const stackedList = document.getElementById('stackedList');
@@ -329,41 +256,6 @@
         const navbarCollapse = document.getElementById('navbarNav');
         let draggedItem = null;
 
-        function updateBodyBackgroundColor() {
-            const rows = listElement.querySelectorAll('tr');
-            if (rows.length === 0) {
-                document.body.style.backgroundColor = '#f8f9fa';
-                return;
-            }
-            let r = 0, g = 0, b = 0;
-            rows.forEach(row => {
-                const colorIndex = parseInt(row.dataset.colorIndex) || 0;
-                const rgb = colors[colorIndex].rgb;
-                r += rgb[0];
-                g += rgb[1];
-                b += rgb[2];
-            });
-            r = Math.round(r / rows.length);
-            g = Math.round(g / rows.length);
-            b = Math.round(b / rows.length);
-            document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
-        }
-
-        function toggleRowColor(row, stackedItem, button) {
-            const currentColor = parseInt(row.dataset.colorIndex) || 0;
-            const nextColor = (currentColor + 1) % colors.length;
-            row.dataset.colorIndex = nextColor;
-            button.style.backgroundColor = colors[nextColor].hex;
-            if (stackedItem) {
-                const stackedButton = stackedItem.querySelector('.color-btn');
-                if (stackedButton) {
-                    stackedButton.style.backgroundColor = colors[nextColor].hex;
-                }
-            }
-            saveToLocalStorage();
-            updateBodyBackgroundColor();
-        }
-
         function moveUp(row, stackedItem) {
             const prevRow = row.previousElementSibling;
             if (prevRow) {
@@ -374,7 +266,6 @@
                     stackedList.insertBefore(stackedItem, stackedItems[index - 1]);
                 }
                 saveToLocalStorage();
-                updateBodyBackgroundColor();
             }
         }
 
@@ -404,7 +295,6 @@
                     if (row) row.dataset.text = newText;
                 }
                 saveToLocalStorage();
-                updateBodyBackgroundColor();
             }
 
             input.addEventListener('blur', saveEditedText);
@@ -420,32 +310,27 @@
             if (text) {
                 const tr = createTableRow(text);
                 listElement.appendChild(tr);
-                const stackedItem = createStackedItem(text, 0, tr.dataset.id);
+                const stackedItem = createStackedItem(text, tr.dataset.id);
                 stackedList.appendChild(stackedItem);
                 saveToLocalStorage();
-                updateBodyBackgroundColor();
                 input.value = '';
             }
         }
 
-        function createTableRow(text, colorIndex = 0) {
+        function createTableRow(text) {
             const tr = document.createElement('tr');
             tr.draggable = true;
-            tr.dataset.colorIndex = colorIndex;
             tr.dataset.id = Date.now() + Math.random();
             tr.dataset.text = text;
             tr.innerHTML = `
                 <td class="editable">${text || 'Untitled'}</td>
-                <td><button class="color-btn" style="background-color: ${colors[colorIndex].hex}"></button></td>
                 <td><button class="btn btn-sm btn-secondary btn-up">Up</button></td>
             `;
             const editable = tr.querySelector('.editable');
             const upButton = tr.querySelector('.btn-up');
-            const colorButton = tr.querySelector('.color-btn');
 
             editable.addEventListener('click', () => makeEditable(editable, tr, document.getElementById('stacked-item-' + tr.dataset.id)));
             upButton.addEventListener('click', () => moveUp(tr, document.getElementById('stacked-item-' + tr.dataset.id)));
-            colorButton.addEventListener('click', () => toggleRowColor(tr, document.getElementById('stacked-item-' + tr.dataset.id), colorButton));
 
             tr.addEventListener('dragstart', () => {
                 draggedItem = tr;
@@ -456,12 +341,11 @@
                 draggedItem = null;
                 syncStackedOrder();
                 saveToLocalStorage();
-                updateBodyBackgroundColor();
             });
             return tr;
         }
 
-        function createStackedItem(text, colorIndex = 0, id) {
+        function createStackedItem(text, id) {
             const div = document.createElement('div');
             div.className = 'stacked-item';
             div.id = 'stacked-item-' + id;
@@ -470,20 +354,15 @@
                 <div class="mb-2">
                     <span class="editable d-block">${text || 'Untitled'}</span>
                 </div>
-                <div class="mb-2">
-                    <button class="color-btn" style="background-color: ${colors[colorIndex].hex}"></button>
-                </div>
                 <div>
                     <button class="btn btn-sm btn-secondary btn-up">Up</button>
                 </div>
             `;
             const editable = div.querySelector('.editable');
             const upButton = div.querySelector('.btn-up');
-            const colorButton = div.querySelector('.color-btn');
 
             editable.addEventListener('click', () => makeEditable(editable, listElement.querySelector(`[data-id="${id}"]`), div));
             upButton.addEventListener('click', () => moveUp(listElement.querySelector(`[data-id="${id}"]`), div));
-            colorButton.addEventListener('click', () => toggleRowColor(listElement.querySelector(`[data-id="${id}"]`), div, colorButton));
 
             div.addEventListener('dragstart', () => {
                 draggedItem = div;
@@ -494,7 +373,6 @@
                 draggedItem = null;
                 syncTableOrder();
                 saveToLocalStorage();
-                updateBodyBackgroundColor();
             });
             return div;
         }
@@ -504,8 +382,7 @@
             stackedList.innerHTML = '';
             rows.forEach(row => {
                 const text = row.querySelector('.editable').textContent;
-                const colorIndex = parseInt(row.dataset.colorIndex) || 0;
-                const stackedItem = createStackedItem(text, colorIndex, row.dataset.id);
+                const stackedItem = createStackedItem(text, row.dataset.id);
                 stackedList.appendChild(stackedItem);
             });
         }
@@ -516,9 +393,7 @@
             stackedItems.forEach(item => {
                 const text = item.querySelector('.editable').textContent;
                 const rowId = item.id.replace('stacked-item-', '');
-                const existingRow = listElement.querySelector(`[data-id="${rowId}"]`);
-                const colorIndex = existingRow ? parseInt(existingRow.dataset.colorIndex) || 0 : 0;
-                const tr = createTableRow(text, colorIndex);
+                const tr = createTableRow(text);
                 tr.dataset.id = rowId;
                 listElement.appendChild(tr);
             });
@@ -527,7 +402,6 @@
         function saveToLocalStorage() {
             const items = [...listElement.querySelectorAll('tr')].map(row => ({
                 text: row.dataset.text || row.querySelector('.editable').textContent || '',
-                colorIndex: parseInt(row.dataset.colorIndex) || 0,
                 id: row.dataset.id
             }));
             localStorage.setItem(lists[currentList].storageKey, JSON.stringify(items));
@@ -535,7 +409,7 @@
 
         function saveListsConfig() {
             const customLists = Object.keys(lists).reduce((acc, key) => {
-                if (!defaultLists[key]) {
+                if (!defaultLists[key] && key !== 'newList') {
                     acc[key] = {
                         title: lists[key].title,
                         placeholder: lists[key].placeholder,
@@ -551,33 +425,29 @@
 
         function loadListsConfig() {
             const customLists = JSON.parse(localStorage.getItem('customLists')) || {};
-            lists = { ...defaultLists, ...customLists };
+            lists = { ...defaultLists, ...customLists, newList: { title: 'New List' } };
             renderNavMenu();
         }
 
         function renderNavMenu() {
             listTabs.innerHTML = '';
-            Object.keys(lists).forEach(listKey => {
-                if (listKey !== 'newList') {
-                    const li = document.createElement('li');
-                    li.className = 'nav-item';
-                    const a = document.createElement('a');
-                    a.className = `nav-link ${listKey === currentList ? 'active' : ''}`;
-                    a.href = '#';
-                    a.dataset.list = listKey;
-                    a.textContent = lists[listKey].title;
-                    a.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        loadList(listKey);
-                        // Collapse the navbar after selection
-                        if (navbarCollapse.classList.contains('show')) {
-                            new bootstrap.Collapse(navbarCollapse, { toggle: true });
-                        }
-                    });
-                    li.appendChild(a);
-                    listTabs.appendChild(li);
+            const wantList = document.createElement('li');
+            wantList.className = 'nav-item';
+            const wantLink = document.createElement('a');
+            wantLink.className = `nav-link ${currentList === 'wants' ? 'active' : ''}`;
+            wantLink.href = '#';
+            wantLink.dataset.list = 'wants';
+            wantLink.textContent = lists.wants.title;
+            wantLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                loadList('wants');
+                if (navbarCollapse.classList.contains('show')) {
+                    new bootstrap.Collapse(navbarCollapse, { toggle: true });
                 }
             });
+            wantList.appendChild(wantLink);
+            listTabs.appendChild(wantList);
+
             const newListLi = document.createElement('li');
             newListLi.className = 'nav-item';
             const newListLink = document.createElement('a');
@@ -588,13 +458,33 @@
             newListLink.addEventListener('click', (e) => {
                 e.preventDefault();
                 addNewList();
-                // Collapse the navbar after selection
                 if (navbarCollapse.classList.contains('show')) {
                     new bootstrap.Collapse(navbarCollapse, { toggle: true });
                 }
             });
             newListLi.appendChild(newListLink);
             listTabs.appendChild(newListLi);
+
+            Object.keys(lists).forEach(listKey => {
+                if (listKey !== 'wants' && listKey !== 'newList') {
+                    const li = document.createElement('li');
+                    li.className = 'nav-item';
+                    const a = document.createElement('a');
+                    a.className = `nav-link ${listKey === currentList ? 'active' : ''}`;
+                    a.href = '#';
+                    a.dataset.list = listKey;
+                    a.textContent = lists[listKey].title;
+                    a.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        loadList(listKey);
+                        if (navbarCollapse.classList.contains('show')) {
+                            new bootstrap.Collapse(navbarCollapse, { toggle: true });
+                        }
+                    });
+                    li.appendChild(a);
+                    listTabs.appendChild(li);
+                }
+            });
         }
 
         function addNewList() {
@@ -629,7 +519,7 @@
                 delete lists[currentList];
                 saveListsConfig();
                 renderNavMenu();
-                loadList('wants'); // Switch to 'wants' as default
+                loadList('wants');
             }
         }
 
@@ -646,21 +536,18 @@
             listElement.innerHTML = '';
             stackedList.innerHTML = '';
 
-            // Show/hide delete button based on whether the list is custom
             deleteListButton.style.display = defaultLists[listKey] ? 'none' : 'block';
 
             const savedItems = JSON.parse(localStorage.getItem(config.storageKey)) || config.defaultItems;
             savedItems.forEach(item => {
                 if (item.text && item.text !== 'undefined' && item.text !== '') {
-                    let newColorIndex = item.colorIndex % colors.length;
-                    const tr = createTableRow(item.text, newColorIndex);
+                    const tr = createTableRow(item.text);
                     tr.dataset.id = item.id || Date.now() + Math.random();
                     listElement.appendChild(tr);
-                    const stackedItem = createStackedItem(item.text, newColorIndex, tr.dataset.id);
+                    const stackedItem = createStackedItem(item.text, tr.dataset.id);
                     stackedList.appendChild(stackedItem);
                 }
             });
-            updateBodyBackgroundColor();
 
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active');
@@ -696,7 +583,6 @@
                     }
                     syncStackedOrder();
                     saveToLocalStorage();
-                    updateBodyBackgroundColor();
                 }
             }
         });
@@ -727,7 +613,6 @@
                     }
                     syncTableOrder();
                     saveToLocalStorage();
-                    updateBodyBackgroundColor();
                 }
             }
         });
@@ -742,7 +627,7 @@
         deleteListButton.addEventListener('click', deleteList);
 
         loadListsConfig();
-        loadList('wants'); // Load 'wants' on page load
+        loadList('wants');
     </script>
 </body>
 </html>
